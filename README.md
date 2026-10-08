@@ -226,3 +226,58 @@ The proposal for the change model-braking-system has been created.
   All tasks complete! You can archive this change with /opsx-archive
 
 ```
+
+## Visualize sysml projects
+
+Open the tool Eclipse SysON utilizando una imagenes de Docker
+
+```yml
+version: '3.8'
+
+services:
+  syson-db:
+    image: postgres:15-alpine
+    container_name: syson-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: syson
+      POSTGRES_USER: syson
+      POSTGRES_PASSWORD: sysonpassword
+    volumes:
+      - syson_db_data:/var/lib/postgresql/data
+
+  syson:
+    image: eclipsesyson/syson:latest
+    container_name: syson-server
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://syson-db:5432/syson
+      SPRING_DATASOURCE_USERNAME: syson
+      SPRING_DATASOURCE_PASSWORD: sysonpassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - syson-db
+
+volumes:
+  syson_db_data:
+```
+
+Start the compose file
+
+```shell
+docker compose up -d
+```
+
+Open the webapp
+
+```shell
+http://localhost:8080
+```
+
+Creae a empty project called Bracking Project and import the unique resource of the project called `braking.sysml`
+
+![Eclipse SysON](sensor_agent/images/eclipse-syscom.png)
+
+
