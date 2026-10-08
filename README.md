@@ -63,79 +63,166 @@ git clone git clone https://github.com/DeciSym/sysmlv2-skill.git
 ```shell
 /openspec-explore 
 
-Use the sysmlv2-skill to model a simple vehicle braking system in SysML v2 textual notation and save it as braking.sysml in this workspace.
-  
-  Requirements:
-  - A package called BrakingSystem
-  - Attribute definitions for Mass and Pressure
-  - Part definitions: BrakePedal, BrakeCaliper and Vehicle
-  - Vehicle is composed of one BrakePedal and four BrakeCaliper
-  - Vehicle has a mass attribute
-  - A requirement definition MaxStoppingDistance with a doc comment
-  
-  After writing the file, run validate-sysml on it. If it reports errors, fix them and validate again until it passes.
-  
-  At the end, tell me which skill files you consulted and show the final validation output.
-
-  A simple vehicle braking system model has been created in braking.sysml following the SysML v2 textual notation standards from the sysmlv2-skill.                                                             
+In OpenSpec Explore Mode, our focus is on architectural thinking, system modeling, and design verification before committing to formal changes (which can be proposed via /opsx-propose).                     
                                                                                                                                                                                                                 
-  ### Model Contents (braking.sysml)                                                                                                                                                                            
+  Below is the exploration and verification of the vehicle braking system model using the sysmlv2-skill.                                                                                                        
+  ──────                                                                                                                                                                                                        
+  ### 1. Architectural Model Overview                                                                                                                                                                           
+                                                                                                                                                                                                                
+    +-------------------------------------------------------------------+                                                                                                                                       
+    |                     package BrakingSystem                         |                                                                                                                                       
+    +-------------------------------------------------------------------+                                                                                                                                       
+      |                                                                                                                                                                                                         
+      +--> [Imports]: private import ScalarValues::*;                                                                                                                                                           
+      |                                                                                                                                                                                                         
+      +--> [Attribute Definitions]                                                                                                                                                                              
+      |      * attribute def Mass :> Real;                                                                                                                                                                      
+      |      * attribute def Pressure :> Real;                                                                                                                                                                  
+      |                                                                                                                                                                                                         
+      +--> [Part Definitions]                                                                                                                                                                                   
+      |      * part def BrakePedal;                                                                                                                                                                             
+      |      * part def BrakeCaliper;                                                                                                                                                                           
+      |      * part def Vehicle                                                                                                                                                                                 
+      |          +-- attribute mass : Mass;                                                                                                                                                                     
+      |          +-- part brakePedal : BrakePedal[1];                                                                                                                                                           
+      |          +-- part brakeCalipers : BrakeCaliper[4];                                                                                                                                                      
+      |                                                                                                                                                                                                         
+      +--> [Requirement Definitions]                                                                                                                                                                            
+             * requirement def MaxStoppingDistance                                                                                                                                                              
+                 +-- doc /* The vehicle stopping distance shall not                                                                                                                                             
+                            exceed the specified threshold... */                                                                                                                                                
+  ──────                                                                                                                                                                                                        
+  ### 2. Model Specification (braking.sysml)                                                                                                                                                                    
+                                                                                                                                                                                                                
+  The model in braking.sysml adheres to all specified requirements:                                                                                                                                             
                                                                                                                                                                                                                 
     package BrakingSystem {                                                                                                                                                                                     
-        private import ScalarValues::*;
-  
-        // Attribute definitions
-        attribute def Mass :> Real;
-        attribute def Pressure :> Real;
-  
-        // Part definitions
-        part def BrakePedal;
-        part def BrakeCaliper;
-  
-        part def Vehicle {
-            attribute mass : Mass;
-            part brakePedal : BrakePedal[1];
-            part brakeCalipers : BrakeCaliper[4];
-        }
-  
-        // Requirement definitions
-        requirement def MaxStoppingDistance {
-            doc /* The vehicle stopping distance shall not exceed the specified threshold from reference speed under emergency braking conditions. */
-        }
-    }
+        private import ScalarValues::*;                                                                                                                                                                         
+                                                                                                                                                                                                                
+        // Attribute definitions                                                                                                                                                                                
+        attribute def Mass :> Real;                                                                                                                                                                             
+        attribute def Pressure :> Real;                                                                                                                                                                         
+                                                                                                                                                                                                                
+        // Part definitions                                                                                                                                                                                     
+        part def BrakePedal;                                                                                                                                                                                    
+        part def BrakeCaliper;                                                                                                                                                                                  
+                                                                                                                                                                                                                
+        part def Vehicle {                                                                                                                                                                                      
+            attribute mass : Mass;                                                                                                                                                                              
+            part brakePedal : BrakePedal[1];                                                                                                                                                                    
+            part brakeCalipers : BrakeCaliper[4];                                                                                                                                                               
+        }                                                                                                                                                                                                       
+                                                                                                                                                                                                                
+        // Requirement definitions                                                                                                                                                                              
+        requirement def MaxStoppingDistance {                                                                                                                                                                   
+            doc /* The vehicle stopping distance shall not exceed the specified threshold from reference speed under emergency braking conditions. */                                                           
+        }                                                                                                                                                                                                       
+    }                                                                                                                                                                                                           
   ──────
-  ### Skill Files Consulted
+  ### 3. Skill Files Consulted
   
-  1. SKILL.md – Validation workflow instructions and core rules (mandatory visibility modifiers for imports, specialization requirements for attribute defs, importing ScalarValues).
-  2. SYNTAX.md – Syntax reference for package declarations, attribute definitions, composition multiplicity ([1] / [4]), doc comments, and requirement definitions.
-  3. ERRORS.md – Error catalog and troubleshooting guidance for KerML / SysML v2 parser rules.
-  4. PATTERNS.md – Structural composition, attribute specialization patterns, and requirement specification conventions.
+  The following files from the sysmlv2-skill were consulted:
+  
+  1. SKILL.md:
+      • Import visibility rule: private import ScalarValues::*;
+      • Attribute specialization rule: attribute def Mass :> Real;
+      • Validation workflow using validate-sysml.
+  2. SYNTAX.md:
+      • Package scoping and part definition syntax.
+      • Multiplicity syntax (BrakePedal[1], BrakeCaliper[4]).
+      • Requirement definition syntax and doc comment formatting (doc /* ... */).
+  3. ERRORS.md:
+      • KerML metamodel compliance and common type resolution pitfalls.
+  4. PATTERNS.md:
+      • Subsystem decomposition and part composition patterns.
+  
   ──────
-  ### Final Validation Output
+  ### 4. Validation Output
   
-  Running validate-sysml braking.sysml:
+  Validation was run using the OMG SysML v2 Pilot Implementation tool (validate-sysml braking.sysml).
   
-    $ validate-sysml braking.sysml
-    Reading .../Domain Libraries/Quantities and Units/ISQMechanics.sysml...
-    Reading .../Domain Libraries/Quantities and Units/ISQAcoustics.sysml...
-    Reading .../Domain Libraries/Quantities and Units/ISQLight.sysml...
-    Reading .../Domain Libraries/Quantities and Units/ISQElectromagnetism.sysml...
-    Reading .../Domain Libraries/Geometry/ShapeItems.sysml...
-    Reading .../Domain Libraries/Geometry/SpatialItems.sysml...
-    Reading .../Domain Libraries/Metadata/ImageMetadata.sysml...
-    Reading .../Domain Libraries/Metadata/RiskMetadata.sysml...
-    Reading .../Domain Libraries/Metadata/ParametersOfInterestMetadata.sysml...
-    Reading .../Domain Libraries/Metadata/ModelingMetadata.sysml...
-    Reading .../Domain Libraries/Requirement Derivation/DerivationConnections.sysml...
-    Reading .../Domain Libraries/Requirement Derivation/RequirementDerivation.sysml...
-    Reading .../Domain Libraries/Cause and Effect/CauseAndEffect.sysml...
-    Reading .../Domain Libraries/Cause and Effect/CausationConnections.sysml...
-    Reading .../Domain Libraries/Analysis/TradeStudies.sysml...
-    Reading .../Domain Libraries/Analysis/StateSpaceRepresentation.sysml...
-    Reading .../Domain Libraries/Analysis/SampledFunctions.sysml...
-    Reading .../Domain Libraries/Analysis/AnalysisTooling.sysml...
+  Exit Code: 0 (Success — no syntax, parsing, or semantic type errors)
   
-    Exit code: 0
+    Reading /home/miguel/git/sysmlv2-validator/target/sysml-download/sysml/sysml.library/Kernel Libraries/Kernel Data Type Library/ScalarValues.kerml...
+    Reading /home/miguel/git/sysmlv2-validator/target/sysml-download/sysml/sysml.library/Kernel Libraries/Kernel Data Type Library/Collections.kerml...
+    ...
+    Reading /home/miguel/git/sysmlv2-validator/target/sysml-download/sysml/sysml.library/Systems Library/Requirements.sysml...
+    Reading /home/miguel/git/sysmlv2-validator/target/sysml-download/sysml/sysml.library/Systems Library/Parts.sysml...
+    ...
+    Reading /home/miguel/git/sysmlv2-validator/target/sysml-download/sysml/sysml.library/Domain Libraries/Quantities and Units/ISQMechanics.sysml...
+    ...
+    Reading /home/miguel/git/sysmlv2-validator/target/sysml-download/sysml/sysml.library/Domain Libraries/Analysis/AnalysisTooling.sysml...
   
-  The model passed validation with zero errors.
+    [Validation completed with 0 errors and 0 warnings]
+  ──────
+  ### Next Steps
+  
+  • If you would like to expand this model into an OpenSpec change proposal (e.g., adding port connections, hydraulic fluid flows, or state behaviors), run /opsx-propose.
+
+```
+
+- **STEP10**: create the proposal from exploration
+
+```shell
+/openspec-propose
+The proposal for the change model-braking-system has been created.
+  
+  ### Change Details
+
+  • Name: model-braking-system
+  • Location: openspec/changes/model-braking-system/
+  • Schema: spec-driven
+  ──────
+  ### Artifacts Created
+  
+  1. proposal.md   
+      • Motivation and scope for introducing the SysML v2 vehicle braking system model, defining the braking-system capability and project impact.
+  2. spec.md
+      • Formal delta specifications and testable scenarios for the package structure, attribute specialization, part composition, requirement definition, and SysML v2 metamodel validation.
+  3. design.md
+      • Technical design decisions regarding single-package file layout, KerML attribute specialization (:> Real), part multiplicities ([1], [4]), and validator integration. 
+  4. tasks.md
+      • Granular implementation tasks with explicit completion criteria covering model construction and automated validate-sysml verification.
+  
+  ──────
+  ### Status
+  
+  All artifacts needed for implementation are ready.
+  
+  The artifacts are ready for review. When you are ready, run /opsx-apply or ask me to apply this change.
+
+```
+
+- ***STEP11*: implement the change
+
+```shell
+/openspec-apply-change
+/openspec-apply-change
+
+○ Thought for 27.7s (Definitions for `BrakePedal`, `BrakeCaliper`, and `Vehicle` need to be established within the specified system modeling language. The `Vehicle` part will incorporate `BrakePedal` (singu...)
+● Ran (openspec instructions apply --change "model-braking-system" --json)
+● Explored 4 files (proposal.md, spec.md, design.md, +1)
+… 5 more actions (4 edits, 1 command) …
+● Edited 1 file (tasks.md)
+● Ran 2 commands (openspec instructions apply --change "model-braking-system" --json · openspec validate model-braking-system) (ctrl+o to expand)
+
+  Using change: model-braking-system (schema: spec-driven)
+  (To override, run /opsx-apply <other>)
+  ──────
+  ## Implementation Complete
+  
+  Change: model-braking-system
+  Schema: spec-driven
+  Progress: 5/5 tasks complete ✓
+  
+  ### Completed This Session
+  
+  [✓] 1.1 Create braking.sysml with BrakingSystem package and private import ScalarValues::*;, and verify package structure
+  [✓] 1.2 Define attribute definitions Mass and Pressure specializing Real, and verify type declarations in braking.sysml
+  [✓] 1.3 Define part definitions BrakePedal, BrakeCaliper, and Vehicle with component composition (brakePedal : BrakePedal[1], brakeCalipers : BrakeCaliper[4], and mass : Mass), and verify composition syntax
+  [✓] 1.4 Add MaxStoppingDistance requirement definition with descriptive doc comment, and verify documentation comment formatting
+  [✓] 2.1 Run validate-sysml braking.sysml using the SysML v2 Pilot Implementation and verify command exits with code 0 and zero error diagnostics
+  ──────
+  All tasks complete! You can archive this change with /opsx-archive
+
 ```
