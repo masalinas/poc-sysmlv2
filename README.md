@@ -278,6 +278,6 @@ http://localhost:8080
 
 Creae a empty project called Bracking Project and import the unique resource of the project called `braking.sysml`
 
-![Eclipse SysON](sensor_agent/images/eclipse-syscom.png)
+![Eclipse SysON](images/eclipse-syscom.png)
 
 
