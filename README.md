@@ -62,6 +62,21 @@ git clone git clone https://github.com/DeciSym/sysmlv2-skill.git
 
 ```shell
 /openspec-explore 
+Usa la skill sysmlv2-skill para modelar en notación textual SysML v2 un sistema de frenado sencillo de un vehículo y guárdalo como braking.sysml en este workspace.
+
+Requisitos:
+- Un package llamado BrakingSystem
+- Definiciones de atributos para Mass y Pressure
+- Definiciones de partes: BrakePedal, BrakeCaliper y Vehicle
+- Vehicle se compone de un BrakePedal y cuatro BrakeCaliper
+- Vehicle tiene un atributo de masa
+- Una definición de requisito MaxStoppingDistance con un comentario doc
+
+Tras escribir el archivo, ejecuta validate-sysml sobre él. Si da errores, corrígelos y vuelve a validar hasta que pase.
+
+Al final, dime qué archivos de la skill has consultado y muestra la salida final de la validación.
+
+
 
 In OpenSpec Explore Mode, our focus is on architectural thinking, system modeling, and design verification before committing to formal changes (which can be proposed via /opsx-propose).                     
                                                                                                                                                                                                                 
